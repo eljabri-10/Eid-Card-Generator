@@ -139,6 +139,49 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* نمط كونتينر لعرض الصورة المولدة */
+    .image-preview-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .preview-instructions {
+      color: white;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    
+    .preview-image {
+      max-width: 90%;
+      max-height: 70vh;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: #f7f6da;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -185,27 +228,40 @@
     
     /**
      * حفظ الصورة ومعالجة الحالات الخاصة بأجهزة iOS
+     * بدون استخدام النوافذ المنبثقة
      */
     function saveImage(imageUrl, nameValue) {
-      // استخدام طريقة أكثر توافقية مع iOS
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-        // طريقة خاصة بـ iOS
-        const imgData = imageUrl.replace("image/png", "image/octet-stream");
+        // إنشاء حاوية لعرض الصورة مباشرة داخل الصفحة
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'image-preview-container';
         
-        // عرض الصورة المولدة في نافذة جديدة (للأجهزة التي لا تدعم التنزيل التلقائي)
-        const newWindow = window.open();
-        if (newWindow) {
-          newWindow.document.write(`<html><body><p style="text-align:center; font-family:Arial;">اضغط مطولاً على الصورة واختر "حفظ الصورة"</p><img src="${imgData}" style="max-width:100%"></body></html>`);
-        } else {
-          alert("يرجى السماح بالنوافذ المنبثقة لحفظ الصورة");
-          // استخدام آلية بديلة في حالة منع النوافذ المنبثقة
-          const link = document.createElement('a');
-          link.download = `معايدة_${nameValue}.png`;
-          link.href = imgData;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
+        // إضافة تعليمات
+        const instructions = document.createElement('p');
+        instructions.className = 'preview-instructions';
+        instructions.innerText = 'اضغط مطولاً على الصورة واختر "حفظ الصورة"';
+        
+        // إضافة الصورة
+        const img = document.createElement('img');
+        img.className = 'preview-image';
+        img.src = imageUrl;
+        img.alt = 'بطاقة المعايدة';
+        
+        // زر الإغلاق
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-button';
+        closeBtn.innerText = 'إغلاق';
+        closeBtn.onclick = function() {
+          document.body.removeChild(imgContainer);
+        };
+        
+        // تجميع الكل
+        imgContainer.appendChild(closeBtn);
+        imgContainer.appendChild(instructions);
+        imgContainer.appendChild(img);
+        
+        // إضافة إلى الصفحة
+        document.body.appendChild(imgContainer);
       } else {
         // الطريقة العادية للأجهزة الأخرى
         const link = document.createElement('a');
