@@ -139,49 +139,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    /* نمط كونتينر لعرض الصورة المولدة */
-    .image-preview-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      z-index: 1000;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    
-    .preview-instructions {
-      color: white;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-    
-    .preview-image {
-      max-width: 90%;
-      max-height: 70vh;
-      border-radius: 5px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    }
-    
-    .close-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      background-color: #f7f6da;
-      color: #000;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
   </style>
 </head>
 <body>
@@ -228,40 +185,23 @@
     
     /**
      * حفظ الصورة ومعالجة الحالات الخاصة بأجهزة iOS
-     * بدون استخدام النوافذ المنبثقة
      */
     function saveImage(imageUrl, nameValue) {
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-        // إنشاء حاوية لعرض الصورة مباشرة داخل الصفحة
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'image-preview-container';
-        
-        // إضافة تعليمات
-        const instructions = document.createElement('p');
-        instructions.className = 'preview-instructions';
-        instructions.innerText = 'اضغط مطولاً على الصورة واختر "حفظ الصورة"';
-        
-        // إضافة الصورة
-        const img = document.createElement('img');
-        img.className = 'preview-image';
-        img.src = imageUrl;
-        img.alt = 'بطاقة المعايدة';
-        
-        // زر الإغلاق
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-button';
-        closeBtn.innerText = 'إغلاق';
-        closeBtn.onclick = function() {
-          document.body.removeChild(imgContainer);
-        };
-        
-        // تجميع الكل
-        imgContainer.appendChild(closeBtn);
-        imgContainer.appendChild(instructions);
-        imgContainer.appendChild(img);
-        
-        // إضافة إلى الصفحة
-        document.body.appendChild(imgContainer);
+        // طريقة خاصة بـ iOS
+        const newWindow = window.open();
+        if (newWindow) {
+          newWindow.document.write(`
+            <html>
+              <body>
+                <p style="text-align:center; font-family:Arial;">اضغط مطولاً على الصورة واختر "حفظ الصورة"</p>
+                <img src="${imageUrl}" style="max-width:100%">
+              </body>
+            </html>
+          `);
+        } else {
+          alert("يرجى السماح بالنوافذ المنبثقة لحفظ الصورة");
+        }
       } else {
         // الطريقة العادية للأجهزة الأخرى
         const link = document.createElement('a');
@@ -290,39 +230,31 @@
       adjustFontSize(nameDisplay, 2000);
 
       const hiddenContainer = document.getElementById("hiddenContainer");
-      
-      // التأكد من تحميل الخطوط قبل تصوير العناصر
-      await document.fonts.ready;
-      
-      // جعل العنصر المخفي مرئيًا مؤقتًا (حل مشكلة iOS)
-      hiddenContainer.style.position = "fixed";
-      hiddenContainer.style.top = "0";
-      hiddenContainer.style.left = "0";
-      hiddenContainer.style.zIndex = "-1"; // خلف كل شيء ولكن ليس مخفيًا تمامًا
-
-      // التأكد من تحميل صورة الخلفية أولاً
       const backgroundImage = document.querySelector(".background-image");
 
       try {
-        // انتظار إكمال تحميل الصورة إذا لم تكن محملة بالفعل
-        if (!backgroundImage.complete) {
+        // تأكد من تحميل الصورة
+        if (!backgroundImage.complete || backgroundImage.naturalWidth === 0) {
           await new Promise((resolve, reject) => {
             backgroundImage.onload = resolve;
-            backgroundImage.onerror = () => {
-              reject(new Error("فشل تحميل صورة الخلفية"));
-            };
+            backgroundImage.onerror = reject;
           });
         }
 
-        // 1) التقط الصورة الكبيرة باستخدام html2canvas
+        // جعل العنصر مرئيًا مؤقتًا
+        hiddenContainer.style.position = "fixed";
+        hiddenContainer.style.top = "0";
+        hiddenContainer.style.left = "0";
+        hiddenContainer.style.zIndex = "-1";
+
+        // تصوير العنصر
         const bigCanvas = await html2canvas(hiddenContainer, {
-          scale: 2, // نصوّر بدقة عالية
+          scale: 2,
           useCORS: true,
           allowTaint: true,
           logging: false,
-          backgroundColor: null, // مهم لدعم الشفافية في iOS
+          backgroundColor: null,
           onclone: function(clonedDoc) {
-            // تأكد من أن العناصر في النسخة المستنسخة مرئية بالكامل
             const clonedContainer = clonedDoc.getElementById('hiddenContainer');
             if (clonedContainer) {
               clonedContainer.style.position = 'static';
@@ -332,41 +264,28 @@
           }
         });
 
-        // إعادة العنصر إلى الإخفاء التام
+        // إعادة العنصر إلى الإخفاء
         hiddenContainer.style.position = "absolute";
         hiddenContainer.style.top = "-9999px";
         hiddenContainer.style.left = "-9999px";
 
-        // 2) أنشئ Canvas جديد بأبعاد أصغر للمخرج النهائي
-        // احفظ النسبة الأصلية: 4168 / 5209 ≈ 0.80
-        // سنختار عرض 1080 مثلاً => الارتفاع = 1080 / 0.80 = 1350
+        // إنشاء الصورة النهائية
         const finalWidth = 1080;
         const finalHeight = 1350;
-
         const smallCanvas = document.createElement('canvas');
         smallCanvas.width = finalWidth;
         smallCanvas.height = finalHeight;
-
         const ctx = smallCanvas.getContext('2d');
-        // ارسم الـbigCanvas في الـsmallCanvas
         ctx.drawImage(bigCanvas, 0, 0, finalWidth, finalHeight);
 
-        // 3) أنشئ رابط التنزيل من الـsmallCanvas
+        // حفظ الصورة
         const finalURL = smallCanvas.toDataURL("image/png");
-        
-        // حفظ الصورة باستخدام الدالة المخصصة
         saveImage(finalURL, nameValue);
 
       } catch (error) {
         console.error("حدث خطأ:", error);
         alert("حدث خطأ أثناء توليد الصورة: " + error.message);
-        
-        // إعادة العنصر إلى الإخفاء التام في حالة الخطأ
-        hiddenContainer.style.position = "absolute";
-        hiddenContainer.style.top = "-9999px";
-        hiddenContainer.style.left = "-9999px";
-        
-        // إيقاف مؤشر التحميل
+      } finally {
         document.getElementById("loader").style.display = "none";
       }
     }
