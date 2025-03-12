@@ -197,6 +197,8 @@
         if (newWindow) {
           newWindow.document.write(`<html><body><p style="text-align:center; font-family:Arial;">اضغط مطولاً على الصورة واختر "حفظ الصورة"</p><img src="${imgData}" style="max-width:100%"></body></html>`);
         } else {
+          alert("يرجى السماح بالنوافذ المنبثقة لحفظ الصورة");
+          // استخدام آلية بديلة في حالة منع النوافذ المنبثقة
           const link = document.createElement('a');
           link.download = `معايدة_${nameValue}.png`;
           link.href = imgData;
@@ -233,6 +235,9 @@
 
       const hiddenContainer = document.getElementById("hiddenContainer");
       
+      // التأكد من تحميل الخطوط قبل تصوير العناصر
+      await document.fonts.ready;
+      
       // جعل العنصر المخفي مرئيًا مؤقتًا (حل مشكلة iOS)
       hiddenContainer.style.position = "fixed";
       hiddenContainer.style.top = "0";
@@ -259,7 +264,16 @@
           useCORS: true,
           allowTaint: true,
           logging: false,
-          backgroundColor: null // مهم لدعم الشفافية في iOS
+          backgroundColor: null, // مهم لدعم الشفافية في iOS
+          onclone: function(clonedDoc) {
+            // تأكد من أن العناصر في النسخة المستنسخة مرئية بالكامل
+            const clonedContainer = clonedDoc.getElementById('hiddenContainer');
+            if (clonedContainer) {
+              clonedContainer.style.position = 'static';
+              clonedContainer.style.visibility = 'visible';
+              clonedContainer.style.display = 'block';
+            }
+          }
         });
 
         // إعادة العنصر إلى الإخفاء التام
