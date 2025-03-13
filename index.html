@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>بطاقة المعايدة</title>
+  <!-- جعل الصفحة تستجيب لأحجام الشاشات (Responsive) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- خط IBM Plex Sans Arabic -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500&display=swap" rel="stylesheet">
+
   <style>
     /* تهيئة الصفحة */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #161616;
-      color: #fff;
+      background-color: #161616; /* خلفية داكنة */
+      color: #fff;              /* نص أبيض */
       font-family: 'IBM Plex Sans Arabic', sans-serif;
       text-align: center;
     }
 
+    /* حاوية رئيسية لتمركز المحتوى في وسط الشاشة */
     .main-container {
       display: flex;
       flex-direction: column;
@@ -26,9 +31,10 @@
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
-      min-height: 100vh;
+      min-height: 100vh; /* حتى يتموضع في المنتصف عموديًا */
     }
 
+    /* الشعار */
     .company-logo {
       height: 60px;
       margin-bottom: 20px;
@@ -38,6 +44,7 @@
       margin: 0 0 15px;
     }
 
+    /* إدخال الاسم والزر بتنسيق عمودي */
     .input-group {
       display: flex;
       flex-direction: column;
@@ -54,12 +61,13 @@
       border: 1px solid #ccc;
       outline: none;
       transition: border-color 0.3s;
-      text-align: center;
+      text-align: center; /* لجعل النص في منتصف الحقل */
     }
     input[type="text"]:focus {
       border-color: #f7f6da;
     }
 
+    /* زر التحميل */
     button {
       padding: 12px 20px;
       font-size: 16px;
@@ -78,16 +86,18 @@
       transform: scale(1);
     }
 
+    /* الحاوية الكبيرة المخفية (4168×5209) - معدلة لدعم iOS */
     .hidden-container {
       position: absolute;
       top: -9999px;
       left: -9999px;
       width: 4168px;
       height: 5209px;
-      background-color: #161616;
+      background-color: #161616; /* لون خلفي احتياطي */
       overflow: hidden;
     }
     
+    /* صورة الخلفية كعنصر منفصل */
     .background-image {
       position: absolute;
       top: 0;
@@ -97,6 +107,7 @@
       object-fit: cover;
     }
     
+    /* اسم الموظف في الصورة الكبيرة */
     .name {
       position: absolute;
       top: 3520px;
@@ -110,9 +121,10 @@
       overflow: hidden;
       max-width: 2000px;
       text-align: center;
-      z-index: 2;
+      z-index: 2; /* للتأكد من عرض الاسم فوق صورة الخلفية */
     }
     
+    /* مؤشر التحميل */
     .loader {
       display: none;
       margin-top: 20px;
@@ -131,25 +143,35 @@
 </head>
 <body>
   <div class="main-container">
+    <!-- شعار الشركة إن وجد -->
     <img src="company_logo.svg" alt="شعار الشركة" class="company-logo">
+
     <h2>أدخل اسمك لتحميل بطاقة المعايدة</h2>
+
     <div class="input-group">
       <input type="text" id="employeeName" placeholder="أدخل اسمك">
       <button onclick="generateCard()">تحميل الصورة</button>
     </div>
+    
+    <!-- مؤشر التحميل -->
     <div id="loader" class="loader"></div>
   </div>
 
+  <!-- الحاوية المخفية بالحجم الأصلي الكبير - معدلة لدعم iOS -->
   <div class="hidden-container" id="hiddenContainer">
     <img src="eid_card.jpg" alt="خلفية بطاقة المعايدة" class="background-image" crossorigin="anonymous">
     <div class="name" id="nameDisplay">اسم الموظف</div>
   </div>
 
+  <!-- مكتبة html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
+    /**
+     * تصغير حجم النص تلقائيًا إذا تجاوز حداً معيناً (2000px).
+     */
     function adjustFontSize(element, maxWidth) {
       let fontSize = 120;
-      const minFontSize = 12;
+      const minFontSize = 12; 
       const context = document.createElement("canvas").getContext("2d");
 
       while (fontSize >= minFontSize) {
@@ -160,30 +182,37 @@
       }
       element.style.fontSize = fontSize + 'px';
     }
-
+    
+    /**
+     * حفظ الصورة ومعالجة الحالات الخاصة بأجهزة iOS
+     */
     function saveImage(imageUrl, nameValue) {
+      // استخدام طريقة أكثر توافقية مع iOS
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+        // طريقة خاصة بـ iOS
+        const imgData = imageUrl.replace("image/png", "image/octet-stream");
+        
+        // عرض الصورة المولدة في نافذة جديدة (للأجهزة التي لا تدعم التنزيل التلقائي)
         const newWindow = window.open();
         if (newWindow) {
-          newWindow.document.write(`
-            <html>
-              <body>
-                <p style="text-align:center; font-family:Arial;">اضغط مطولاً على الصورة واختر "حفظ الصورة"</p>
-                <img src="${imageUrl}" style="max-width:100%">
-              </body>
-            </html>
-          `);
+          newWindow.document.write(`<html><body><p style="text-align:center; font-family:Arial;">اضغط مطولاً على الصورة واختر "حفظ الصورة"</p><img src="${imgData}" style="max-width:100%"></body></html>`);
         } else {
-          alert("تعذر فتح نافذة جديدة. الرجاء المحاولة يدويًا.");
+          const link = document.createElement('a');
+          link.download = `معايدة_${nameValue}.png`;
+          link.href = imgData;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         }
       } else {
+        // الطريقة العادية للأجهزة الأخرى
         const link = document.createElement('a');
         link.download = `معايدة_${nameValue}.png`;
         link.href = imageUrl;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
       }
+      
+      // إيقاف مؤشر التحميل
       document.getElementById("loader").style.display = "none";
     }
 
@@ -194,21 +223,27 @@
         return;
       }
 
+      // عرض مؤشر التحميل
       document.getElementById("loader").style.display = "block";
 
+      // ضع الاسم في العنصر المخفي بالحجم الكبير
       const nameDisplay = document.getElementById("nameDisplay");
       nameDisplay.textContent = nameValue;
       adjustFontSize(nameDisplay, 2000);
 
       const hiddenContainer = document.getElementById("hiddenContainer");
+      
+      // جعل العنصر المخفي مرئيًا مؤقتًا (حل مشكلة iOS)
       hiddenContainer.style.position = "fixed";
       hiddenContainer.style.top = "0";
       hiddenContainer.style.left = "0";
-      hiddenContainer.style.zIndex = "-1";
+      hiddenContainer.style.zIndex = "-1"; // خلف كل شيء ولكن ليس مخفيًا تمامًا
 
+      // التأكد من تحميل صورة الخلفية أولاً
       const backgroundImage = document.querySelector(".background-image");
 
       try {
+        // انتظار إكمال تحميل الصورة إذا لم تكن محملة بالفعل
         if (!backgroundImage.complete) {
           await new Promise((resolve, reject) => {
             backgroundImage.onload = resolve;
@@ -218,18 +253,23 @@
           });
         }
 
+        // 1) التقط الصورة الكبيرة باستخدام html2canvas
         const bigCanvas = await html2canvas(hiddenContainer, {
-          scale: 2,
+          scale: 2, // نصوّر بدقة عالية
           useCORS: true,
           allowTaint: true,
           logging: false,
-          backgroundColor: null
+          backgroundColor: null // مهم لدعم الشفافية في iOS
         });
 
+        // إعادة العنصر إلى الإخفاء التام
         hiddenContainer.style.position = "absolute";
         hiddenContainer.style.top = "-9999px";
         hiddenContainer.style.left = "-9999px";
 
+        // 2) أنشئ Canvas جديد بأبعاد أصغر للمخرج النهائي
+        // احفظ النسبة الأصلية: 4168 / 5209 ≈ 0.80
+        // سنختار عرض 1080 مثلاً => الارتفاع = 1080 / 0.80 = 1350
         const finalWidth = 1080;
         const finalHeight = 1350;
 
@@ -238,17 +278,25 @@
         smallCanvas.height = finalHeight;
 
         const ctx = smallCanvas.getContext('2d');
+        // ارسم الـbigCanvas في الـsmallCanvas
         ctx.drawImage(bigCanvas, 0, 0, finalWidth, finalHeight);
 
+        // 3) أنشئ رابط التنزيل من الـsmallCanvas
         const finalURL = smallCanvas.toDataURL("image/png");
+        
+        // حفظ الصورة باستخدام الدالة المخصصة
         saveImage(finalURL, nameValue);
 
       } catch (error) {
         console.error("حدث خطأ:", error);
         alert("حدث خطأ أثناء توليد الصورة: " + error.message);
+        
+        // إعادة العنصر إلى الإخفاء التام في حالة الخطأ
         hiddenContainer.style.position = "absolute";
         hiddenContainer.style.top = "-9999px";
         hiddenContainer.style.left = "-9999px";
+        
+        // إيقاف مؤشر التحميل
         document.getElementById("loader").style.display = "none";
       }
     }
