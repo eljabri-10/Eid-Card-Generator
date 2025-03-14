@@ -2,7 +2,6 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- إضافة meta للتوافق مع الهواتف -->
   <title>بطاقة المعايدة</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -21,7 +20,6 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      padding: 10px;
     }
     .company-logo {
       height: 60px;
@@ -29,36 +27,33 @@
     }
     h2 {
       margin: 0 0 15px 0;
-      font-size: 1.5rem;
     }
     .input-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      width: 80%; /* توسيع الواجهة لتكون متجاوبة */
-      max-width: 400px; /* حد أقصى لتجنب التضخم على الشاشات الكبيرة */
+      width: 100%;
+      max-width: 300px;
     }
     input[type="text"] {
-      padding: 15px;
-      font-size: 1.2rem;
+      padding: 12px 15px;
+      font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
       outline: none;
       text-align: center;
-      width: 100%; /* ملء العرض المتاح */
     }
     input[type="text"]:focus {
       border-color: #f7f6da;
     }
     button {
-      padding: 15px 20px;
-      font-size: 1.2rem;
+      padding: 12px 20px;
+      font-size: 16px;
       background-color: #f7f6da;
       color: #000;
       border: none;
       cursor: pointer;
       border-radius: 5px;
-      width: 100%; /* ملء العرض المتاح */
     }
     button:hover {
       background-color: #e3e2c8;
@@ -93,38 +88,6 @@
       object-fit: contain;
       background: rgba(0,0,0,0.8);
       z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .preview-buttons {
-      position: absolute;
-      top: 20px;
-      width: 80%;
-      max-width: 400px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .preview-buttons button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      width: 48%;
-    }
-
-    /* تصميم متجاوب */
-    @media (max-width: 600px) {
-      h2 {
-        font-size: 1.2rem;
-      }
-      input[type="text"], button {
-        font-size: 1rem;
-        padding: 12px;
-      }
-      .company-logo {
-        height: 50px;
-      }
     }
   </style>
 </head>
@@ -205,55 +168,15 @@
         imgPreview.src = imgData;
         imgPreview.className = "image-preview";
         document.body.innerHTML = '';
-        
-        const previewContainer = document.createElement('div');
-        previewContainer.className = "image-preview";
-        previewContainer.appendChild(imgPreview);
+        document.body.appendChild(imgPreview);
 
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.className = "preview-buttons";
-
-        const downloadButton = document.createElement('button');
-        downloadButton.textContent = "تحميل";
-        downloadButton.onclick = () => {
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          alert("تم إنشاء الصورة! يمكنك حفظها يدويًا بالضغط مطولًا عليها.");
+        } else {
           const link = document.createElement('a');
           link.download = `معايدة_${nameValue}.png`;
           link.href = imgData;
           link.click();
-        };
-
-        const backButton = document.createElement('button');
-        backButton.textContent = "رجوع";
-        backButton.onclick = () => {
-          document.body.innerHTML = ''; // إعادة بناء الصفحة الأصلية
-          document.body.innerHTML = `
-            <div class="main-container">
-              <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo">
-              <h2>أدخل اسمك لتحميل بطاقة المعايدة</h2>
-              <div class="input-group">
-                <input type="text" id="employeeName" placeholder="أدخل اسمك">
-                <button onclick="generateCard()">تحميل الصورة</button>
-              </div>
-            </div>
-            <div class="hidden-container" id="hiddenContainer">
-              <div class="name" id="nameDisplay">اسم الموظف</div>
-            </div>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-            <script>
-              ${generateCard.toString()}
-              ${preloadImage.toString()}
-              ${adjustFontSize.toString()}
-            </script>
-          `;
-        };
-
-        buttonsContainer.appendChild(downloadButton);
-        buttonsContainer.appendChild(backButton);
-        previewContainer.appendChild(buttonsContainer);
-        document.body.appendChild(previewContainer);
-
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          alert("تم إنشاء الصورة! يمكنك حفظها يدويًا بالضغط مطولًا عليها أو استخدام زر التحميل.");
         }
       } catch (error) {
         console.error("حدث خطأ:", error);
