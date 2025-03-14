@@ -51,15 +51,14 @@
       border-color: #f7f6da;
     }
     button {
-      padding: 12px 20px; /* إعادة الحجم الأصلي */
+      padding: 15px 20px;
       font-size: 1.2rem;
       background-color: #f7f6da;
       color: #000;
       border: none;
       cursor: pointer;
       border-radius: 5px;
-      width: auto; /* إعادة الحجم إلى الأصلي بدلاً من 100% */
-      min-width: 150px; /* حد أدنى لضمان قابلية الضغط */
+      width: 100%; /* جعل الزر بنفس عرض خانة الإدخال */
     }
     button:hover {
       background-color: #e3e2c8;
@@ -75,7 +74,7 @@
     }
     .name {
       position: absolute;
-      top: 1000px; /* تحريك الاسم للأسفل قليلاً ليكون في منتصف الإطار */
+      top: 930px; /* إعادة الاسم إلى الموقع السابق */
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
@@ -109,8 +108,7 @@
         height: 50px; /* تقليل حجم الشعار على الهواتف */
       }
       button {
-        width: auto; /* الحفاظ على الحجم الأصلي على الهواتف */
-        min-width: 120px; /* تقليل الحد الأدنى على الهواتف */
+        width: 100%; /* التأكد من أن الزر يبقى بنفس عرض الخانة على الهواتف */
       }
     }
   </style>
