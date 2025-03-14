@@ -62,21 +62,21 @@
       position: absolute;
       top: -9999px;
       left: -9999px;
-      width: 1080px; /* عكس الأبعاد: العرض أصبح 1080px */
-      height: 1350px; /* الارتفاع أصبح 1350px */
+      width: 1080px;
+      height: 1350px;
       background: url('https://i.imgur.com/nQZnQo1.jpg') center center no-repeat;
-      background-size: contain; /* لضمان ظهور الصورة بالكامل */
+      background-size: contain;
     }
     .name {
       position: absolute;
-      top: 450px; /* ضبط الموقع بناءً على الأبعاد الجديدة */
+      top: 840px; /* إعادة القيمة الأصلية التي كانت تعمل بشكل جيد */
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
       font-weight: 500;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
-      font-size: 20px; /* تقليل حجم الخط ليناسب الأبعاد */
-      max-width: 300px; /* تقليل العرض الأقصى */
+      font-size: 30px; /* إعادة القيمة الأصلية */
+      max-width: 500px; /* إعادة القيمة الأصلية */
       text-align: center;
     }
     .image-preview {
@@ -118,7 +118,7 @@
     }
 
     function adjustFontSize(element, maxWidth) {
-      let fontSize = 20;
+      let fontSize = 30;
       const minFontSize = 12;
       const context = document.createElement("canvas").getContext("2d");
 
@@ -140,7 +140,7 @@
 
       const nameDisplay = document.getElementById("nameDisplay");
       nameDisplay.textContent = nameValue;
-      adjustFontSize(nameDisplay, 300);
+      adjustFontSize(nameDisplay, 500);
 
       const hiddenContainer = document.getElementById("hiddenContainer");
       try {
