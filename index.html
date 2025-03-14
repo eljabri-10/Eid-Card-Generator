@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- إضافة meta للتوافق مع الهواتف -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>بطاقة المعايدة</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -21,7 +21,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      padding: 10px; /* إضافة padding لتحسين التخطيط على الهواتف */
+      padding: 10px;
     }
     .company-logo {
       height: 60px;
@@ -29,14 +29,14 @@
     }
     h2 {
       margin: 0 0 15px 0;
-      font-size: 1.5rem; /* حجم خط افتراضي */
+      font-size: 1.5rem;
     }
     .input-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      width: 80%; /* توسيع الواجهة لتكون متجاوبة */
-      max-width: 400px; /* حد أقصى لتجنب التضخم على الشاشات الكبيرة */
+      width: 80%;
+      max-width: 400px;
     }
     input[type="text"] {
       padding: 15px;
@@ -45,20 +45,22 @@
       border: 1px solid #ccc;
       outline: none;
       text-align: center;
-      width: 100%; /* ملء العرض المتاح */
+      width: 100%;
+      box-sizing: border-box; /* لضمان احتساب الـ padding ضمن العرض */
     }
     input[type="text"]:focus {
       border-color: #f7f6da;
     }
     button {
-      padding: 15px 20px;
+      padding: 15px;
       font-size: 1.2rem;
       background-color: #f7f6da;
       color: #000;
       border: none;
       cursor: pointer;
       border-radius: 5px;
-      width: 100%; /* جعل الزر بنفس عرض خانة الإدخال */
+      width: 100%; /* جعل الزر بنفس عرض الخانة */
+      box-sizing: border-box; /* لضمان احتساب الـ padding ضمن العرض */
     }
     button:hover {
       background-color: #e3e2c8;
@@ -74,7 +76,7 @@
     }
     .name {
       position: absolute;
-      top: 930px; /* إعادة الاسم إلى الموقع السابق */
+      top: 915px; /* الاسم محرك قليلاً للأسفل كما طلبت سابقًا */
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
@@ -98,17 +100,17 @@
     /* تصميم متجاوب */
     @media (max-width: 600px) {
       h2 {
-        font-size: 1.2rem; /* تقليل حجم العنوان على الهواتف */
+        font-size: 1.2rem;
       }
       input[type="text"], button {
-        font-size: 1rem; /* تقليل حجم الخط على الهواتف */
+        font-size: 1rem;
         padding: 12px;
       }
       .company-logo {
-        height: 50px; /* تقليل حجم الشعار على الهواتف */
+        height: 50px;
       }
       button {
-        width: 100%; /* التأكد من أن الزر يبقى بنفس عرض الخانة على الهواتف */
+        width: 100%; /* التأكد من تناسق الزر مع الخانة على الهواتف */
       }
     }
   </style>
