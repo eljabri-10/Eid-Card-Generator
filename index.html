@@ -62,21 +62,21 @@
       position: absolute;
       top: -9999px;
       left: -9999px;
-      width: 1350px;
-      height: 1080px;
-      background: url('https://i.imgur.com/nQZnQo1.jpg') center center no-repeat; /* رابط مباشر للصورة الخلفية */
-      background-size: cover;
+      width: 1080px; /* عكس الأبعاد: العرض أصبح 1080px */
+      height: 1350px; /* الارتفاع أصبح 1350px */
+      background: url('https://i.imgur.com/nQZnQo1.jpg') center center no-repeat;
+      background-size: contain; /* لضمان ظهور الصورة بالكامل */
     }
     .name {
       position: absolute;
-      top: 720px;
+      top: 450px; /* ضبط الموقع بناءً على الأبعاد الجديدة */
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
       font-weight: 500;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
-      font-size: 40px;
-      max-width: 600px;
+      font-size: 20px; /* تقليل حجم الخط ليناسب الأبعاد */
+      max-width: 300px; /* تقليل العرض الأقصى */
       text-align: center;
     }
     .image-preview {
@@ -86,14 +86,14 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.8);
       z-index: 1000;
     }
   </style>
 </head>
 <body>
   <div class="main-container">
-    <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo"> <!-- رابط مباشر لشعار الشركة -->
+    <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo">
     <h2>أدخل اسمك لتحميل بطاقة المعايدة</h2>
     <div class="input-group">
       <input type="text" id="employeeName" placeholder="أدخل اسمك">
@@ -118,7 +118,7 @@
     }
 
     function adjustFontSize(element, maxWidth) {
-      let fontSize = 40;
+      let fontSize = 20;
       const minFontSize = 12;
       const context = document.createElement("canvas").getContext("2d");
 
@@ -140,14 +140,17 @@
 
       const nameDisplay = document.getElementById("nameDisplay");
       nameDisplay.textContent = nameValue;
-      adjustFontSize(nameDisplay, 600);
+      adjustFontSize(nameDisplay, 300);
 
       const hiddenContainer = document.getElementById("hiddenContainer");
       try {
         // تحميل الصور مسبقًا
-        await preloadImage('https://i.imgur.com/nQZnQo1.jpg'); // رابط مباشر للصورة الخلفية
-        await preloadImage('https://i.imgur.com/W7i90r5.png'); // رابط مباشر لشعار الشركة
+        await preloadImage('https://i.imgur.com/nQZnQo1.jpg');
+        await preloadImage('https://i.imgur.com/W7i90r5.png');
         console.log("تم تحميل الصور بنجاح");
+
+        // إضافة تأخير صغير لضمان رسم الصورة
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         const canvas = await html2canvas(hiddenContainer, {
           scale: 2,
