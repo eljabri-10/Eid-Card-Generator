@@ -73,10 +73,11 @@
       height: 1350px;
       background: url('https://i.imgur.com/nQZnQo1.jpg') center center no-repeat;
       background-size: contain;
+      visibility: hidden; /* إخفاء العنصر من الشاشة */
     }
     .name {
       position: absolute;
-      top: 910px;
+      top: 950px;
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
@@ -208,11 +209,12 @@
         return;
       }
 
+      // تهيئة hiddenContainer بشكل منفصل
+      const hiddenContainer = document.getElementById("hiddenContainer");
       const nameDisplay = document.getElementById("nameDisplay");
       nameDisplay.textContent = nameValue;
       adjustFontSize(nameDisplay, 500);
 
-      const hiddenContainer = document.getElementById("hiddenContainer");
       try {
         await preloadImage('https://i.imgur.com/nQZnQo1.jpg');
         await preloadImage('https://i.imgur.com/W7i90r5.png');
@@ -224,7 +226,9 @@
           scale: 3,
           useCORS: true,
           allowTaint: true,
-          logging: true
+          logging: true,
+          windowWidth: 1080, // تحديد العرض الدقيق
+          windowHeight: 1350 // تحديد الارتفاع الدقيق
         });
 
         const imgData = canvas.toDataURL("image/png", 1.0);
