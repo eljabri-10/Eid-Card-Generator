@@ -64,18 +64,18 @@
       left: -9999px;
       width: 1350px;
       height: 1080px;
-      background: url('eid_card.jpg') center center no-repeat;
+      background: url('https://i.imgur.com/nQZnQo1.jpg') center center no-repeat; /* رابط مباشر للصورة الخلفية */
       background-size: cover;
     }
     .name {
       position: absolute;
-      top: 720px; /* نصف الارتفاع تقريبًا مع ضبط نسبي */
+      top: 720px;
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
       font-weight: 500;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
-      font-size: 40px; /* تقليل الحجم ليناسب الأبعاد الجديدة */
+      font-size: 40px;
       max-width: 600px;
       text-align: center;
     }
@@ -93,7 +93,7 @@
 </head>
 <body>
   <div class="main-container">
-    <img src="company_logo.png" alt="شعار الشركة" class="company-logo">
+    <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo"> <!-- رابط مباشر لشعار الشركة -->
     <h2>أدخل اسمك لتحميل بطاقة المعايدة</h2>
     <div class="input-group">
       <input type="text" id="employeeName" placeholder="أدخل اسمك">
@@ -144,9 +144,9 @@
 
       const hiddenContainer = document.getElementById("hiddenContainer");
       try {
-        // تحميل الصورة مسبقًا
-        await preloadImage('eid_card.jpg');
-        await preloadImage('company_logo.png');
+        // تحميل الصور مسبقًا
+        await preloadImage('https://i.imgur.com/nQZnQo1.jpg'); // رابط مباشر للصورة الخلفية
+        await preloadImage('https://i.imgur.com/W7i90r5.png'); // رابط مباشر لشعار الشركة
         console.log("تم تحميل الصور بنجاح");
 
         const canvas = await html2canvas(hiddenContainer, {
@@ -166,7 +166,7 @@
         const imgPreview = document.createElement('img');
         imgPreview.src = imgData;
         imgPreview.className = "image-preview";
-        document.body.innerHTML = ''; // إزالة العناصر الأخرى لعرض الصورة بالكامل
+        document.body.innerHTML = ''; // إزالة العناصر الأخرى
         document.body.appendChild(imgPreview);
 
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
