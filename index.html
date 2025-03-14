@@ -46,7 +46,7 @@
       outline: none;
       text-align: center;
       width: 100%;
-      box-sizing: border-box; /* لضمان احتساب الـ padding ضمن العرض */
+      box-sizing: border-box;
     }
     input[type="text"]:focus {
       border-color: #f7f6da;
@@ -59,8 +59,8 @@
       border: none;
       cursor: pointer;
       border-radius: 5px;
-      width: 100%; /* جعل الزر بنفس عرض الخانة */
-      box-sizing: border-box; /* لضمان احتساب الـ padding ضمن العرض */
+      width: 100%;
+      box-sizing: border-box;
     }
     button:hover {
       background-color: #e3e2c8;
@@ -76,7 +76,7 @@
     }
     .name {
       position: absolute;
-      top: 910px; /* الاسم محرك قليلاً للأسفل كما طلبت سابقًا */
+      top: 950px;
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
@@ -86,31 +86,54 @@
       max-width: 500px;
       text-align: center;
     }
-    .image-preview {
+    .image-preview-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       background: rgba(0,0,0,0.8);
       z-index: 1000;
     }
+    .image-preview {
+      max-width: 90%;
+      max-height: 80%;
+      object-fit: contain;
+    }
+    .back-button {
+      margin-top: 20px;
+      padding: 15px;
+      font-size: 1.2rem;
+      background-color: #f7f6da; /* نفس لون زر تحميل الصورة */
+      color: #000;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 400px; /* نفس عرض الزر في الصفحة الأولى */
+      box-sizing: border-box;
+    }
+    .back-button:hover {
+      background-color: #e3e2c8; /* نفس تأثير الـ hover */
+    }
 
-    /* تصميم متجاوب */
     @media (max-width: 600px) {
       h2 {
         font-size: 1.2rem;
       }
-      input[type="text"], button {
+      input[type="text"], button, .back-button {
         font-size: 1rem;
         padding: 12px;
       }
       .company-logo {
         height: 50px;
       }
-      button {
-        width: 100%; /* التأكد من تناسق الزر مع الخانة على الهواتف */
+      button, .back-button {
+        width: 100%;
       }
     }
   </style>
@@ -188,11 +211,43 @@
           throw new Error("الصورة الناتجة فارغة أو غير صالحة");
         }
 
+        const previewContainer = document.createElement('div');
+        previewContainer.className = "image-preview-container";
+
         const imgPreview = document.createElement('img');
         imgPreview.src = imgData;
         imgPreview.className = "image-preview";
+        previewContainer.appendChild(imgPreview);
+
+        const backButton = document.createElement('button');
+        backButton.textContent = "رجوع";
+        backButton.className = "back-button";
+        backButton.onclick = () => {
+          document.body.innerHTML = ''; // إعادة بناء الصفحة الأولى
+          document.body.innerHTML = `
+            <div class="main-container">
+              <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo">
+              <h2>أدخل اسمك لتحميل بطاقة المعايدة</h2>
+              <div class="input-group">
+                <input type="text" id="employeeName" placeholder="أدخل اسمك">
+                <button onclick="generateCard()">تحميل الصورة</button>
+              </div>
+            </div>
+            <div class="hidden-container" id="hiddenContainer">
+              <div class="name" id="nameDisplay">اسم الموظف</div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            <script>
+              ${preloadImage.toString()}
+              ${adjustFontSize.toString()}
+              ${generateCard.toString()}
+            </script>
+          `;
+        };
+        previewContainer.appendChild(backButton);
+
         document.body.innerHTML = '';
-        document.body.appendChild(imgPreview);
+        document.body.appendChild(previewContainer);
 
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           alert("تم إنشاء الصورة! يمكنك حفظها يدويًا بالضغط مطولًا عليها.");
