@@ -2,6 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- إضافة meta للتوافق مع الهواتف -->
   <title>بطاقة المعايدة</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -20,6 +21,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      padding: 10px; /* إضافة padding لتحسين التخطيط على الهواتف */
     }
     .company-logo {
       height: 60px;
@@ -27,33 +29,36 @@
     }
     h2 {
       margin: 0 0 15px 0;
+      font-size: 1.5rem; /* حجم خط افتراضي */
     }
     .input-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      width: 100%;
-      max-width: 300px;
+      width: 80%; /* توسيع الواجهة لتكون متجاوبة */
+      max-width: 400px; /* حد أقصى لتجنب التضخم على الشاشات الكبيرة */
     }
     input[type="text"] {
-      padding: 12px 15px;
-      font-size: 16px;
+      padding: 15px;
+      font-size: 1.2rem;
       border-radius: 5px;
       border: 1px solid #ccc;
       outline: none;
       text-align: center;
+      width: 100%; /* ملء العرض المتاح */
     }
     input[type="text"]:focus {
       border-color: #f7f6da;
     }
     button {
-      padding: 12px 20px;
-      font-size: 16px;
+      padding: 15px 20px;
+      font-size: 1.2rem;
       background-color: #f7f6da;
       color: #000;
       border: none;
       cursor: pointer;
       border-radius: 5px;
+      width: 100%; /* ملء العرض المتاح */
     }
     button:hover {
       background-color: #e3e2c8;
@@ -88,6 +93,20 @@
       object-fit: contain;
       background: rgba(0,0,0,0.8);
       z-index: 1000;
+    }
+
+    /* تصميم متجاوب */
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.2rem; /* تقليل حجم العنوان على الهواتف */
+      }
+      input[type="text"], button {
+        font-size: 1rem; /* تقليل حجم الخط على الهواتف */
+        padding: 12px;
+      }
+      .company-logo {
+        height: 50px; /* تقليل حجم الشعار على الهواتف */
+      }
     }
   </style>
 </head>
