@@ -76,7 +76,7 @@
     }
     .name {
       position: absolute;
-      top: 950px;
+      top: 910px;
       left: 50%;
       transform: translateX(-50%);
       color: #f7f6da;
@@ -108,17 +108,17 @@
       margin-top: 20px;
       padding: 15px;
       font-size: 1.2rem;
-      background-color: #f7f6da; /* نفس لون زر تحميل الصورة */
+      background-color: #f7f6da;
       color: #000;
       border: none;
       cursor: pointer;
       border-radius: 5px;
       width: 80%;
-      max-width: 400px; /* نفس عرض الزر في الصفحة الأولى */
+      max-width: 400px;
       box-sizing: border-box;
     }
     .back-button:hover {
-      background-color: #e3e2c8; /* نفس تأثير الـ hover */
+      background-color: #e3e2c8;
     }
 
     @media (max-width: 600px) {
@@ -211,19 +211,21 @@
           throw new Error("الصورة الناتجة فارغة أو غير صالحة");
         }
 
+        // إنشاء حاوية للصورة والزر
         const previewContainer = document.createElement('div');
         previewContainer.className = "image-preview-container";
 
+        // إضافة الصورة
         const imgPreview = document.createElement('img');
         imgPreview.src = imgData;
         imgPreview.className = "image-preview";
         previewContainer.appendChild(imgPreview);
 
+        // إضافة زر الرجوع
         const backButton = document.createElement('button');
         backButton.textContent = "رجوع";
         backButton.className = "back-button";
         backButton.onclick = () => {
-          document.body.innerHTML = ''; // إعادة بناء الصفحة الأولى
           document.body.innerHTML = `
             <div class="main-container">
               <img src="https://i.imgur.com/W7i90r5.png" alt="شعار الشركة" class="company-logo">
@@ -246,9 +248,11 @@
         };
         previewContainer.appendChild(backButton);
 
+        // استبدال المحتوى الحالي بـ previewContainer
         document.body.innerHTML = '';
         document.body.appendChild(previewContainer);
 
+        // التحميل التلقائي حسب الجهاز
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           alert("تم إنشاء الصورة! يمكنك حفظها يدويًا بالضغط مطولًا عليها.");
         } else {
